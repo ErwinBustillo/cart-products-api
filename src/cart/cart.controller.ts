@@ -64,11 +64,12 @@ export class CartController {
 
     if (!(cart && cart.items.length)) {
       const statusCode = HttpStatus.BAD_REQUEST;
+      req.statusCode = statusCode
 
-      res.status(statusCode).json({
+      return {
         statusCode,
         message: 'Cart is empty',
-      });
+      }
     }
 
     const { id: cartId, items } = cart;
@@ -82,10 +83,10 @@ export class CartController {
     });
     await this.cartService.removeByUserId(userId);
 
-    res.status(HttpStatus.OK).json({
+    return {
       statusCode: HttpStatus.OK,
       message: 'OK',
       data: { order }
-    });
+    };
   }
 }

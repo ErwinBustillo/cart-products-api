@@ -1,5 +1,5 @@
 
-service: serverless-example
+service: nest-cart-service
 
 plugins:
   - serverless-offline
@@ -9,12 +9,39 @@ provider:
   name: aws
   runtime: nodejs16.x
   region: us-east-1
-
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - rds-db:connect
+      Resource:
+        - arn:aws:rds:us-east-1:887240492441:db:cloudx
+    - Effect: Allow
+      Action:
+        - ec2:CreateNetworkInterface
+      Resource: '*'
+    - Effect: Allow
+      Action:
+        - ec2:CreateNetworkInterface
+        - ec2:DescribeNetworkInterfaces
+        - ec2:DeleteNetworkInterface
+      Resource: '*'
 functions:
   main:
     handler: dist/main.handler
-    timeout: 10
+    vpc:
+      securityGroupIds:
+        - sg-0ea9a05fc6b779aa6
+      subnetIds:
+        - subnet-04aa64756613c8b77
+        - subnet-0b138b64a7f1adade
+        - subnet-037907aaa977ba112
+        - subnet-022ba6649ce3c07de
+        - subnet-090f5893f9f637f00
+        - subnet-027c2149e179654ac
     events:
       - http:
           method: ANY
-          path: '/{proxy+}'
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
