@@ -7,16 +7,20 @@ import { v4 as uuidv4 } from 'uuid';
 import { Cart } from '../models';
 import { Cart as CartEntity, CartItem as CartItemEntity } from '../../entities';
 
-
 @Injectable()
 export class CartService {
   constructor(
-    @InjectRepository(CartEntity) private cartsRepository: Repository<CartEntity>,
-    @InjectRepository(CartItemEntity) private cartItemsRepository: Repository<CartItemEntity>
-  ) { }
+    @InjectRepository(CartEntity)
+    private cartsRepository: Repository<CartEntity>,
+    @InjectRepository(CartItemEntity)
+    private cartItemsRepository: Repository<CartItemEntity>,
+  ) {}
 
   async findByUserId(userId: string): Promise<Cart> {
-    const cart = await this.cartsRepository.findOne({ where: { user_id: userId }, relations: ['items'] });
+    const cart = await this.cartsRepository.findOne({
+      where: { user_id: userId },
+      relations: ['items'],
+    });
 
     if (!cart) {
       return null;
@@ -31,7 +35,7 @@ export class CartService {
           description: 'test description',
           price: 100,
         },
-        count: cartItem.count
+        count: cartItem.count,
       })),
     };
   }
@@ -50,11 +54,11 @@ export class CartService {
 
     if (!cart) {
       return null;
-    }     
-    
+    }
+
     return {
       id: cartData.id,
-      items: []
+      items: [],
     };
   }
 
@@ -85,5 +89,4 @@ export class CartService {
     }
     await this.cartsRepository.remove(cart);
   }
-
 }

@@ -1,9 +1,18 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, OneToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
 import { CartItem } from './cart-item.entity';
 
 export enum CART_STATUS {
-    OPEN = 'OPEN',
-    ORDERED = 'ORDERED'
+  OPEN = 'OPEN',
+  ORDERED = 'ORDERED',
 }
 
 @Entity('carts')
@@ -23,6 +32,9 @@ export class Cart {
   @Column({ type: 'enum', enum: CART_STATUS, default: CART_STATUS.OPEN })
   status: string;
 
-  @OneToMany(() => CartItem, cartItem => cartItem.cart)
+  @OneToMany(
+    () => CartItem,
+    cartItem => cartItem.cart,
+  )
   items: CartItem[];
 }
