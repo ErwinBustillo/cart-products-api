@@ -3,25 +3,19 @@ import { Cart } from './cart.entity';
 
 @Entity('cart_items')
 export class CartItem {
-  @PrimaryColumn({
-    name: 'cart_id',
-    type: 'uuid'
-  })
-  cartId: string;
+  @PrimaryColumn('uuid')
+  id: string;
 
-  @PrimaryColumn({
-    name: 'product_id',
-    type: 'uuid'
-  })
-  productId: string;
+  @Column({ type: 'uuid' })
+  cart_id: string;
 
-  @ManyToOne(() => Cart, (cart) => cart.items, { orphanedRowAction: 'delete' })
-  @JoinColumn({ name: 'cart_id', referencedColumnName: 'id' })
-  cart: Cart;
+  @Column({ type: 'uuid' })
+  product_id: string;
 
-  @Column({
-    name: 'count',
-    type: 'int'
-  })
+  @Column({ type: 'integer' })
   count: number;
+
+  @ManyToOne(() => Cart, cart => cart.items, {onDelete: 'CASCADE'})
+  @JoinColumn({ name: 'cart_id' })
+  cart?: Cart;
 }

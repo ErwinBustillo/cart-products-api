@@ -1,4 +1,4 @@
-import { Cart,CartItem } from "../../entities";
+import { Cart, CartItem } from '../models';
 
 
 const AVG_PRODUCT_PRICE = 5;

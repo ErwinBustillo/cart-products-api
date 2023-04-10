@@ -8,40 +8,21 @@ export enum CART_STATUS {
 
 @Entity('carts')
 export class Cart {
-  @PrimaryColumn({
-    name: 'id',
-    type: 'uuid'
-  })
+  @PrimaryColumn({ type: 'uuid', nullable: false })
   id: string;
 
-  @Column({
-    name: 'user_id',
-    type: 'uuid'
-  })
-  userId: string;
+  @Column({ type: 'uuid', nullable: false })
+  user_id: string;
 
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'date'
-  })
-  createdAt: Date;
+  @Column({ type: 'timestamp', nullable: false })
+  created_at: string;
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'date'
-  })
-  updatedAt: Date;
+  @Column({ type: 'timestamp', nullable: false })
+  updated_at: string;
 
-  @Column({
-    name: 'status',
-    type: 'enum',
-    enum: CART_STATUS,
-    default: CART_STATUS.OPEN
-  })
-  status: CART_STATUS;
+  @Column({ type: 'enum', enum: CART_STATUS, default: CART_STATUS.OPEN })
+  status: string;
 
-  @OneToMany(() => CartItem, (cartItem) => cartItem.cart, { cascade: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id', referencedColumnName: 'cart_id'})
-  items: CartItem[]
-
+  @OneToMany(() => CartItem, cartItem => cartItem.cart)
+  items: CartItem[];
 }
