@@ -33,6 +33,10 @@ export class CartController {
       getUserIdFromRequest(req),
     );
 
+    if (!cart) {
+      return null;
+    }
+
     return {
       statusCode: HttpStatus.OK,
       message: 'OK',

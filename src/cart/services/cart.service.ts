@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -30,7 +31,7 @@ export class CartService {
       id: cart.id,
       items: cart.items.map(cartItem => ({
         product: {
-          id: cartItem.product_id,
+          id: cartItem.productId,
           title: 'test product',
           description: 'test description',
           price: 100,
@@ -64,7 +65,6 @@ export class CartService {
 
   async findOrCreateByUserId(userId: string): Promise<Cart> {
     let userCart = await this.findByUserId(userId);
-
     if (userCart) {
       return userCart;
     }
@@ -75,11 +75,37 @@ export class CartService {
   }
 
   async updateByUserId(userId: string, { items }: Cart): Promise<Cart> {
-    const userCart = await this.findOrCreateByUserId(userId);
-    userCart.items = items;
-    await this.cartsRepository.save(userCart);
+    const cart = await this.cartsRepository.findOne(userId);
+    console.log('items', items);
+    cart.items = items.map(
+      item =>
+        ({
+          cartId: cart.id,
+          productId: item.product.id,
+          count: item.count,
+        } as any),
+    );
 
-    return userCart;
+    cart.updated_at = new Date().toString();
+
+    const updatedCart = await this.cartsRepository.save(cart);
+
+    if (!updatedCart) {
+      return null;
+    }
+
+    return {
+      id: cart.id,
+      items: cart.items.map(cartItem => ({
+        product: {
+          id: cartItem.productId,
+          title: 'test product',
+          description: 'test description',
+          price: 100,
+        },
+        count: cartItem.count,
+      })),
+    };
   }
 
   async removeByUserId(userId: string): Promise<void> {

@@ -1,13 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
 import { CartItem } from './cart-item.entity';
 
 export enum CART_STATUS {
@@ -35,6 +26,8 @@ export class Cart {
   @OneToMany(
     () => CartItem,
     cartItem => cartItem.cart,
+    { cascade: true, onDelete: 'CASCADE' },
   )
+  @JoinColumn({ name: 'id', referencedColumnName: 'cart_id' })
   items: CartItem[];
 }
